@@ -1,23 +1,21 @@
-#include <Stepper.h>
+#include <Wire.h>
+#include <Adafruit_MotorShield.h>
+#include <Adafruit_PWMServoDriver.h>
 
-const int stepsPerRevolution = 200;  // change this to fit the number of steps per revolution
-// for your motor
-
-// initialize the stepper library on pins 8 through 11:
-Stepper myStepper(stepsPerRevolution, 8, 9, 10, 11);
-
-int stepCount = 0;         // number of steps the motor has taken
+Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
+Adafruit_StepperMotor *myMotor = AFMS.getStepper(200, 2);
 
 void setup() {
-  // initialize the serial port:
   Serial.begin(9600);
+  Serial.println("Stepper Test!");
+
+  AFMS.begin();
+
+  myMotor->setSpeed(10); //10 rps
 }
 
 void loop() {
-  // step one step:
-  myStepper.step(1);
-  Serial.print("steps:");
-  Serial.println(stepCount);
-  stepCount++;
-  delay(500);
+  Serial.println("Single coil steps");
+  myMotor->step(100, FORWARD, SINGLE);
+  myMotor->step(100, BACKWARD, SINGLE);
 }
